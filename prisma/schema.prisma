@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Teacher {
+  id        Int         @id @default(autoincrement()) // Descriptive primary key name
+  name      String // Renamed from teacher_name
+  subject   String // Renamed from teacher_subject
+  classes   Class[] // One-to-many relation with Class
+  Detention Detention[]
+}
+
+model Student {
+  id              Int               @id @default(autoincrement())
+  name            String // Renamed from student_name
+  grade           Int // Renamed from student_grade
+  trustcard       Boolean           @default(true)
+  Attendance      Attendance[]
+  ClassMembership ClassMembership[]
+  Detention       Detention[]
+}
+
+model Class {
+  id              Int               @id @default(autoincrement())
+  name            String // Renamed from class_name
+  type            Int // Changed from String to Int (0-2)
+  teacherId       Int // Foreign key field
+  teacher         Teacher           @relation(fields: [teacherId], references: [id]) // Many-to-one relation with Teacher
+  advising        Advising?
+  Club            Club?
+  OutdoorArea     OutdoorArea?
+  Attendance      Attendance[]
+  ClassMembership ClassMembership[]
+}
+
+model Advising {
+  id      Int    @id @default(autoincrement())
+  name    String
+  classId Int    @unique
+  class   Class  @relation(fields: [classId], references: [id])
+}
+
+model Club {
+  id      Int    @id @default(autoincrement())
+  name    String
+  classId Int    @unique
+  class   Class  @relation(fields: [classId], references: [id])
+}
+
+model OutdoorArea {
+  id      Int    @id @default(autoincrement())
+  name    String
+  oaId    Int    @unique
+  classId Int    @unique
+  class   Class  @relation(fields: [classId], references: [id])
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  status    Int
+  studentId Int
+  classId   Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  class     Class    @relation(fields: [classId], references: [id])
+}
+
+model ClassMembership {
+  id              Int     @id @default(autoincrement())
+  membership_type Int
+  studentId       Int
+  classId         Int
+  student         Student @relation(fields: [studentId], references: [id])
+  class           Class   @relation(fields: [classId], references: [id])
+}
+
+model Detention {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  teacherId Int // Foreign key field
+  studentId Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  teacher   Teacher  @relation(fields: [teacherId], references: [id]) // Many-to-one relation with Teacher
+}
