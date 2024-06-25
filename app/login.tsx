@@ -32,8 +32,8 @@ const Login = () => {
       <header className="h-24 bg-primary bg-repeat">
         {/* Top design as background */}
       </header>
-      <main className="flex-grow flex items-center justify-center">
-        <div className="text-center mt-10 border p-7 rounded-xl border-1.5 hover:border-secondary ">
+      <main className="flex-grow flex items-center justify-center bg-bottom bg-repeat-x" style={{ backgroundImage: "url('/bottom-pattern.svg')" }}>
+        <div className=" w-96 h-96 text-center -mt-32 border p-7 rounded-xl border-1.75 hover:border-secondary ">
           <h1 className="text-4xl font-bold">Sign In</h1>
           {/* Sign in form */}
           <form className="mt-5">
@@ -49,14 +49,11 @@ const Login = () => {
             className='border p-2 rounded w-full max-w-md' 
             />
           </form>
-            <button className="mt-4 p-2 bg-primary text-white rounded">
+            <button className="mt-4 min-w-20 p-2 bg-primary text-white rounded">
               Next
             </button>
         </div>
       </main>
-      <footer className=" bg-bottom-pattern bg-no-repeat bg-bottom">
-       <img src="bottom-pattern.svg" alt=""/>
-      </footer>
     </div>
   )
 }
