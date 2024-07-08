@@ -13,16 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Credentials {
+  id       Int       @id @default(autoincrement())
+  userId   String    @unique
+  password String   @unique
+  role     String
+  Teacher  Teacher[]
+  Student  Student[]
+}
+
 model Teacher {
-  id        Int         @id @default(autoincrement()) // Descriptive primary key name
-  name      String // Renamed from teacher_name
-  subject   String // Renamed from teacher_subject
-  classes   Class[] // One-to-many relation with Class
-  Detention Detention[]
+  id            Int         @id @default(autoincrement()) // Descriptive primary key name
+  credentialsId Int
+  credentials   Credentials @relation(fields: [credentialsId], references: [id])
+  name          String // Renamed from teacher_name
+  subject       String // Renamed from teacher_subject
+  classes       Class[] // One-to-many relation with Class
+  Detention     Detention[]
 }
 
 model Student {
   id              Int               @id @default(autoincrement())
+  credentialsId   Int
+  credentials     Credentials       @relation(fields: [credentialsId], references: [id])
   name            String // Renamed from student_name
   grade           Int // Renamed from student_grade
   trustcard       Boolean           @default(true)
